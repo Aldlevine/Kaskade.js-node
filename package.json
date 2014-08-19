@@ -1,0 +1,25 @@
+{
+  "name": "kaskadejs-node",
+  "version": "0.3.0",
+  "description": "Kaskade.js-node\r ===============",
+  "main": "index.js",
+  "dependencies": {
+    "express": "~4.8.4",
+    "sockjs": "~0.3.9",
+    "browserify": "~5.10.0",
+    "minifyify": "~4.0.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Aldlevine/Kaskade.js-node.git"
+  },
+  "author": "Aaron Levine",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Aldlevine/Kaskade.js-node/issues"
+  }
+}
