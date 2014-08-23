@@ -8,8 +8,7 @@
     "sockjs": "~0.3.9",
     "browserify": "~5.10.0",
     "minifyify": "~4.0.4",
-    "node-uuid": "~1.4.1",
-    "node-rsa": "~0.1.53"
+    "node-uuid": "~1.4.1"
   },
   "devDependencies": {},
   "scripts": {

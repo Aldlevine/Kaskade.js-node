@@ -27,5 +27,9 @@ node_modules
 # Aptana Project
 .project
 
-#ssl keys
+# ssl keys
 *.pem
+
+# Bundled Files
+lib/client/client-bundle.js
+lib/client/client-bundle.map.json
