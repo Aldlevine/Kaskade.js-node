@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="/kaskade.js"></script>
+		<title>Kaskade 0.4 Chat Example</title>
+		<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1" />
+		
+		<style>
+			
+		</style>
+	</head>
+	<body>
+		<h1>Kaskade<sup>0.4</sup> Chat Example</h1>
+		
+		<div data-k.unless="currentUser.loggedIn">
+			<element data-k.render="loginForm.template" data-k.context="loginForm"></element>
+		</div>
+		<div data-k.if="currentUser.loggedIn">
+		    <div>
+		        Logged in as: <span data-k.html="currentUser.name"></span> <button data-k.click="logout">Logout</button>
+		    </div>
+		    <div>
+                <span>Total Messages: </span><span data-k.html="total.value"></span>
+            </div>
+		    <element data-k.render="messageForm.template" data-k.context="messageForm"></element>
+			<element data-k.list="messages.items" data-k.template="Message"></element>
+		</div>
+		
+		<script id="LoginForm" type="template">
+		    <div>
+		        <a href="#" data-k.click="toggleNewUser" data-k.unless="newUser">Create Account</a>
+		        <a href="#" data-k.click="toggleNewUser" data-k.if="newUser">Login</a>
+		    </div>
+		    
+		    <form data-k.event="submit:login" data-k.unless="newUser">
+    			<div>
+    				User Name: <input type="text" data-k.value="name"/>
+    			</div>
+    			<div>
+    				Password: <input type="password" data-k.value="password"/>
+    			</div>
+    			<input type="submit" value="Login">
+			</form>
+			
+			<form data-k.event="submit:createUser" data-k.if="newUser">
+			    <div>
+			        User Name: <input type="text" data-k.value="newUserName"/>
+			    </div>
+			    <div>
+                    Password: <input type="password" data-k.value="newUserPassword"/>
+                </div>
+                <div>
+                    Confirm: <input type="password" data-k.value="newUserPasswordConfirm"/>
+                </div>
+                <input type="submit" value="Sign Up" />
+			</form>
+			
+		</script>
+		
+		<script id="MessageForm" type="template">
+		    <form data-k.event="submit:send">
+		        <div class="message-form">
+		            <input type="text" data-k.value="data" />
+		            <input type="submit" value="Send" />
+		        </div>
+		    </form>
+		</script>
+		
+		<script id="Message" type="template">
+			<div class="message" data-k.event="click:click, mouseover:hover, mouseout:unhover">
+				<span data-k.html="user.name"></span> : <span data-k.html="data"></span>
+			</div>
+		</script>
+		
+		<script>
+						
+			var Messages = new kaskade.data.Collection({
+				name: 'Messages',
+				keyField: 'message_id'
+			});
+			
+			var Users = new kaskade.data.Collection({
+				name: 'Users',
+				keyField: 'user_id'
+			});
+			
+			
+			var Message = kaskade.Class({}, function(){
+			    this.user = kaskade.Hash.observe(Users.records[this.user_id]);
+			    this.template = 'Message';
+                this.click = function(){
+                    console.log(this, this.$root.currentUser);
+                    if(this.user_id == this.$root.currentUser.user_id)
+                        Messages.remove({message_id:this.message_id});
+                };
+                this.hover = function(event, element){
+                    if(this.user_id == this.$root.currentUser.user_id)
+                        element.style.color = 'red';
+                };
+                this.unhover = function(event, element){
+                    if(this.user_id == this.$root.currentUser.user_id)
+                        element.style.color = '';
+                };
+			});
+			
+			var LoginForm = kaskade.Class({
+				template: 'LoginForm',
+				name: '',
+				password: '',
+				login: function(event){
+				    var loginForm = this;
+					kaskade.execute('log_in', {name:loginForm.name, password:loginForm.password}, function(ret){
+						if(ret.status == 'error'){
+							alert(ret.message);
+						}else if(ret.status == 'success'){
+						    loginForm.$root.currentUser.name = ret.user.name;
+						    loginForm.$root.currentUser.user_id = ret.user.user_id;
+							loginForm.$root.currentUser.loggedIn = true;
+						}
+					});
+					if(event.preventDefault)
+					   event.preventDefault();
+					event.returnValue = false;
+				},
+				
+				newUser: false,
+				newUserName: '',
+				newUserPassword: '',
+				newUserPasswordConfirm: '',
+				toggleNewUser: function(event){
+				    this.newUser = !this.newUser;
+				},
+				createUser: function(event){
+				    var loginForm = this;
+				    if(loginForm.newUserPassword != loginForm.newUserPasswordConfirm)
+				        alert('Password and confirmation do not match');
+				    else{
+				        var params = {
+				            name: loginForm.newUserName,
+				            password: loginForm.newUserPassword
+				        };
+				        kaskade.execute('create_user', params, function(ret){
+				            if(ret.status == 'error'){
+				                alert(ret.message);
+				            }else if(ret.status == 'success'){
+				                loginForm.$root.currentUser.name = ret.user.name;
+                                loginForm.$root.currentUser.user_id = ret.user.user_id;
+                                loginForm.$root.currentUser.loggedIn = true;
+				            }
+				        });
+				        
+				    }
+				    if(event.preventDefault)
+				        event.preventDefault();
+			        event.returnValue = false;
+				}
+			});
+			
+			var MessageForm = kaskade.Class({
+			    template: 'MessageForm',
+			    data: '',
+			    send: function(event){
+                    var messageForm = this;
+			        Messages.insert({data:messageForm.data});
+			        if(event.preventDefault)
+                        event.preventDefault();
+                    event.returnValue = false;
+                    this.data = '';
+			    }
+			});
+			
+			var app = new kaskade.Hash({
+				users: kaskade.List.observe(Users, {}, {}),
+				messages: kaskade.List.observe(Messages, {}, {
+					typeFunction: function(item){return Message;},
+					sortingFunction: function(a, b){
+						if(a.message_id > b.message_id) return -1;
+						if(a.message_id < b.message_id) return 1;
+						return 0;
+					}
+				}),
+				total: new kaskade.Routine(function(){
+				    var total = this.$parent.messages.items.length;
+					if(this.$parent.currentUser.loggedIn)
+						return total;
+					else
+						return 0;
+				}),
+				loginForm: new LoginForm(),
+				messageForm: new MessageForm(),
+				currentUser:  new kaskade.Hash({
+					loggedIn: false,
+					user_id: null,
+					name: null
+				}),
+				
+				logout: function(event){
+                    var app = this;
+                    kaskade.execute('log_out', {}, function(ret){
+                        if(ret.status == 'error'){
+                            alert(ret.message);
+                        }else{
+                            app.currentUser.name = null;
+                            app.currentUser.user_id = null;
+                            app.currentUser.loggedIn = false;
+                            
+                            app.loginForm.name = '';
+                            app.loginForm.password = '';
+                            
+                            app.loginForm.newUserName = '';
+                            app.loginForm.newUserPassword = '';
+                            app.loginForm.newUserPasswordConfirm = '';
+                        }
+                    });
+                }
+			});
+			
+			kaskade.connection.connect({onopen: function(){
+				kaskade.Template.parseTemplates(document.documentElement);
+				kaskade.BindingManager.parseBindings(app, document.documentElement);
+				kaskade.Routine.init();
+			}});
+			
+		</script>
+		
+	</body>
+</html>
