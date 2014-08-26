@@ -1,4 +1,5 @@
 var fs = require('fs');
+var eventEmitter = require('./eventEmitter');
 
 var $k = require('../../index')({
     debug: true,
@@ -6,7 +7,10 @@ var $k = require('../../index')({
         key: fs.readFileSync(__dirname + '/key.pem'),
         cert: fs.readFileSync(__dirname + '/cert.pem')
     },
-    port:443
+    port:443,
+    onConnectionClose: function(conn){
+        eventEmitter.emit('connection_closed', conn);
+    }
 });
 
 var app = $k.server.create();
