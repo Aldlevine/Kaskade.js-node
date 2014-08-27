@@ -1,6 +1,10 @@
 var fs = require('fs');
 var eventEmitter = require('./eventEmitter');
 var browserify = require('browserify');
+var sass = require('node-sass');
+var bourbon = require('node-bourbon');
+
+var SASS_COMPILE_ON_SERVE = false;
 
 /** INIT KASKADE **/
 var $k = require('../../index')({
@@ -31,7 +35,41 @@ require('./methods')($k);
     });
     b.plugin('minifyify', {output: __dirname + '/client/index-bundle.map.json', map: 'index-bundle.map'});
     
-    b.bundle().pipe(fs.createWriteStream(__dirname + '/client/index-bundle.js'));
+    b.bundle().pipe(
+        fs.createWriteStream(__dirname + '/client/index-bundle.js')
+        .on('finish', function(){
+            console.log('Finished Bundling JS');
+        })
+    );
+    
+    
+})();
+
+/** RENDER SCSS **/
+(function renderSCSS(){
+    
+    if(SASS_COMPILE_ON_SERVE){
+        app.use(
+            sass.middleware({
+                src: __dirname + '/client/css',
+                file: __dirname + '/client/css',
+                includePaths: bourbon.includePaths,
+                outputStyle: 'compressed',
+                debug: true
+            })
+        );
+    }else{
+        var css = sass.renderSync({
+            file: __dirname + '/client/css/index.scss',
+            includePaths: bourbon.includePaths,
+            outputStyle: 'compressed'
+        });
+        
+        fs.writeFile(__dirname + '/client/css/index.css', css, function(err){
+            if(err) return console.log(err);
+            console.log('Finished Compiling CSS');
+        });
+    }
 })();
 
 /** SETUP URL PATHS **/
@@ -43,6 +81,9 @@ app.get('/index.js', function(req, res){
 });
 app.get('/index-bundle.map', function(req, res){
     res.sendFile(__dirname + '/client/index-bundle.map.json');
+});
+app.get('/index.css', function(req, res){
+    res.sendFile(__dirname + '/client/css/index.css');
 });
 
 /** LISTEN **/

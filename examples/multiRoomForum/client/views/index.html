@@ -2,6 +2,7 @@
 <html>
     
     <head>
+        <link rel="stylesheet" href="/index.css" />
         <script src="/kaskade.js"></script>
         <script src="/index.js"></script>
         <title>Kaskade 0.4 Multi Room Forum Example</title>
@@ -10,8 +11,138 @@
     
     <body onload="initiaizeApp()">
         
+        <div class="body-wrap">
+            <div class="body">
+                
+                <span data-k.unless="currentUser.logged_in">
+                    <element data-k.render="splash.template" data-k.context="splash"></element>
+                </span>
+                
+                <span data-k.if="currentUser.logged_in">
+                    <element data-k.list="rooms.items" data-k.template="RoomListItem"></element>
+                    <element data-k.render="createRoomForm.template" data-k.context="createRoomForm"></element>
+                </span>
+                
+            </div>
+        </div>
+        <div class="header">Header</div>
+        <div class="footer">Footer</div>
         
+        <!-- TEMPLATES -->
+        
+        <!-- ROOM-LIST-ITEM -->
+        <script id="RoomListItem" type="template">
+            <div data-k.html="title"></div>
+        </script>
+        <!-- /ROOM-LIST-ITEM -->
+        
+        <!-- CREATE-ROOM-FORM -->
+        <script id="CreateRoomForm" type="template">
+            <div class="panel">
+                <div class="title">
+                    Create a new room
+                </div>
+                <div>
+                    <form data-k.event="submit:submit">
+                        
+                        <div>
+                            <label class="form-field">
+                                <input type="text" data-k.value="title" data-k.attr="value:title" placeholder="Title" />
+                                <span>Title</span>
+                            </label>
+                        </div>
+                        
+                        <div>
+                            <label class="form-button">
+                                <input type="submit" value="Create New Room"/>
+                            </label>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+        </script>
+        <!-- /CREATE-ROOM-FORM -->
+        
+        <!-- SPLASH -->
+        <script id="Splash" type="template">
+            <span data-k.if="login">
+                <element data-k.render="loginForm.template" data-k.context="loginForm"></element>
+            </span>
+            <span data-k.unless="login">
+                <element data-k.render="signupForm.template" data-k.context="signupForm"></element>
+            </span>
+        </script>
+        
+        <script id="LoginForm" type="template">
+            <div class="panel">
+                <a href="#" data-k.click="$parent.setSignup">Sign Up</a>
+                <div>
+                    <form data-k.event="submit:submit">
+                        
+                        <div>
+                            <label class="form-field">
+                                <input type="text" data-k.value="email" data-k.attr="value:email" placeholder="Email" />
+                                <span>Email</span>
+                            </label>
+                        </div>
+                        
+                        <div>
+                            <label class="form-field">
+                                <input type="password" data-k.value="password" data-k.attr="value:password" placeholder="Password" />
+                                <span>Password</span>
+                            </label>
+                        </div>
+                        
+                        <div>
+                            <label class="form-button">
+                                <input type="submit" value="Log In"/>
+                            </label>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+        </script>
+        
+        <script id="SignupForm" type="template">
+            <div class="panel">
+                <a href="#" data-k.click="$parent.setLogin">Login</a>
+                <div>
+                    <form data-k.event="submit:submit">
+                        
+                        <div>
+                            <label class="form-field">
+                                <input type="text" data-k.value="email" data-k.attr="value:email" placeholder="Email" />
+                                <span>Email</span>
+                            </label>
+                        </div>
+                        
+                        <div>
+                            <label class="form-field">
+                                <input type="password" data-k.value="password" data-k.attr="value:password" placeholder="Password" />
+                                <span>Password</span>
+                            </label>
+                        </div>
+                        
+                        <div>
+                            <label class="form-field">
+                                <input type="password" data-k.value="password_conf" data-k.attr="value:password_conf" placeholder="Confirm Password" />
+                                <span>Confirm Password</span>
+                            </label>
+                        </div>
+                        
+                        <div>
+                            <label class="form-button">
+                                <input type="submit" value="Sign Up"/>
+                            </label>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+        </script>
+        <!-- /SPLASH -->
         
     </body>
-    
 </html>

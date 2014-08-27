@@ -4,5 +4,6 @@ module.exports = mysql.createConnection({
     host: 'localhost',
     user: 'kaskade',
     password: 'SECRET',
-    database: 'kaskade_multi_room_forum_example'
+    database: 'kaskade_multi_room_forum_example',
+    dateStrings: true
 });

@@ -1,0 +1,65 @@
+$form-field-width: 100%;
+$form-field-height: 4rem;
+$form-field-padding: 1rem;
+$form-field-margin: 0.5rem;
+$form-field-duration: 500ms; 
+
+label.form-field {
+  position: relative;
+  display: inline-block;
+  width: $form-field-width;
+  height: $form-field-height;
+  margin-top: $form-field-margin;
+  
+  & > input {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: $form-field-height/2;
+    padding: 0 $form-field-padding;
+    z-index: 2;
+    
+    text-align: center;
+    
+    &:not([value=""]) + span {
+      @include transform(translateY(0));
+    }
+    
+  }
+  
+  & > span {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: $form-field-height/2;
+    padding: 0 $form-field-padding;
+    z-index: 1;
+    
+    line-height: $form-field-height/2;
+    text-align: center;
+    
+    background: $c0-mid;
+    color: $c0-light;
+    
+    @include transform-origin(0% 100%);
+    @include transform(translateY(100%));
+    @include transition(all $form-field-duration);
+  }
+  
+}
+
+label.form-button {
+  @extend label.form-field;
+  
+  height: $form-field-height/2;
+  
+  & > input, & > button {
+    width: 100%;
+    height: $form-field-height/2;
+    
+    background: $c0-mid;
+    color: $c0-light;
+    border: none;
+    
+  }
+}

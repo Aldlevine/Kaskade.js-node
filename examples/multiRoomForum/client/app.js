@@ -1,7 +1,7 @@
 var collections = require('./collections');
 var classes = require('./classes');
 
-var App = module.exports = new kaskade.Hash({
+var App = window.App = module.exports = new kaskade.Hash({
     
     currentUser: new kaskade.Hash({
         user_id: '',

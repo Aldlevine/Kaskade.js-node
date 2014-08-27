@@ -1,0 +1,26 @@
+$panel-width: 80%;
+$panel-max-width: 60rem;
+$panel-sm-width: 100%;
+$panel-padding: 1rem;
+$panel-margin: 1rem;
+$panel-bg: $c0-mid-light;
+
+.panel {
+  margin: $panel-margin auto;
+  width: $panel-width;
+  max-width: $panel-max-width;
+  padding: $panel-padding;
+  
+  background: $c0-mid-light;
+  
+  & > .title {
+    text-align: center;
+  }
+}
+
+@media screen and (max-width:640px){
+  .panel {
+    width: $panel-sm-width;
+    max-width: $panel-sm-width;
+  }
+}
