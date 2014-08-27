@@ -33,3 +33,5 @@ node_modules
 # Bundled Files
 lib/client/client-bundle.js
 lib/client/client-bundle.map.json
+examples/multiRoomForum/client/index-bundle.js
+examples/multiRoomForum/client/index-bundle.map.json

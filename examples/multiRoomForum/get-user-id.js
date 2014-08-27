@@ -9,7 +9,6 @@ module.exports = function(conn, done){
         function(err, result){
             if(err) return done(err);
             if(!result.length) return done('No matching user');
-            console.log(result);
             return done(null, result[0].user_id);
         }
     );

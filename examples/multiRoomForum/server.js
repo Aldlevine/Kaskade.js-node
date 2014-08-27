@@ -1,6 +1,8 @@
 var fs = require('fs');
 var eventEmitter = require('./eventEmitter');
+var browserify = require('browserify');
 
+/** INIT KASKADE **/
 var $k = require('../../index')({
     debug: true,
     ssl: {
@@ -13,17 +15,40 @@ var $k = require('../../index')({
     }
 });
 
+/** CREATE SERVER **/
 var app = $k.server.create();
 
-app.get('/', function(req, res){
-    res.sendFile(__dirname + '/views/index.html');
-});
-
-var collections = require('./collection')($k);
+/** SET UP COLLECTIONS AND METHODS **/
+require('./collection')($k);
 require('./methods')($k);
 
+/** BUNDLE CLIENT JS **/
+(function bundleClient(){
+    var b  = browserify({
+        entries: __dirname + '/client/index.js',
+        standalone: 'initiaizeApp',
+        debug: true 
+    });
+    b.plugin('minifyify', {output: __dirname + '/client/index-bundle.map.json', map: 'index-bundle.map'});
+    
+    b.bundle().pipe(fs.createWriteStream(__dirname + '/client/index-bundle.js'));
+})();
+
+/** SETUP URL PATHS **/
+app.get('/', function(req, res){
+    res.sendFile(__dirname + '/client/views/index.html');
+});
+app.get('/index.js', function(req, res){
+    res.sendFile(__dirname + '/client/index-bundle.js');
+});
+app.get('/index-bundle.map', function(req, res){
+    res.sendFile(__dirname + '/client/index-bundle.map.json');
+});
+
+/** LISTEN **/
 $k.server.listen();
 
+/** SETUP HTTP REDIRECT **/
 (function http_redirect(){
     var express = require('express');
     var app = express();
