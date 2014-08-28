@@ -13,6 +13,13 @@ var App = window.App = module.exports = new kaskade.Hash({
     
     splash: new classes.Splash(),
     
+    openRoom: false,
+      
+    closeRoom: function(){
+        var app = this;
+        app.openRoom = false;
+    },
+    
     rooms: kaskade.List.observe(collections.Rooms, {}, {
         typeFunction: function(item){return classes.Room;},
         sortingFunction: function(a, b){

@@ -19,20 +19,44 @@
                 </span>
                 
                 <span data-k.if="currentUser.logged_in">
-                    <element data-k.list="rooms.items" data-k.template="RoomListItem"></element>
-                    <element data-k.render="createRoomForm.template" data-k.context="createRoomForm"></element>
+                    
+                    <span data-k.unless="openRoom">
+                        <element data-k.render="createRoomForm.template" data-k.context="createRoomForm"></element>
+                        <element data-k.list="rooms.items" data-k.template="RoomListItem"></element>
+                    </span>
+                    
+                    <span data-k.if="openRoom">
+                        <element data-k.render="openRoom.template" data-k.context="openRoom"></element>
+                    </span>
+                    
                 </span>
                 
             </div>
         </div>
-        <div class="header">Header</div>
+        <div class="header">
+            Header
+            <div class="left button" data-k.if="openRoom">
+                <span data-k.click="closeRoom">&lt;</span>
+            </div>
+        </div>
         <div class="footer">Footer</div>
         
         <!-- TEMPLATES -->
         
+        
+        <!-- ROOM -->
+        <script id="Room" type="template">
+            <div class="panel">
+                <div class="title" data-k.html="title"></div>
+            </div>
+        </script>
+        <!-- /ROOM -->
+        
         <!-- ROOM-LIST-ITEM -->
         <script id="RoomListItem" type="template">
-            <div data-k.html="title"></div>
+            <div class="panel" data-k.click="open">
+                <div class="title" data-k.html="title"></div>
+            </div>
         </script>
         <!-- /ROOM-LIST-ITEM -->
         

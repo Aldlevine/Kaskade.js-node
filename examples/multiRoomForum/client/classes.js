@@ -50,24 +50,27 @@ var classes = module.exports = (function() {
             collections.Rooms.insert({
                 title : title
             });
+            createRoomForm.title = '';
             if (e.preventDefault)
                 e.preventDefault();
             e.returnValue = false;
         }
     });
-
+    
     /** ROOM **/
     classes.Room = new kaskade.Class({
+        template: 'Room',
+        
         room_id : '',
         title : '',
         user : new kaskade.Hash(),
         messages : new kaskade.List(),
         created_at : '',
         messageForm : new classes.MessageForm(),
-
+        isOpen: false,
+        
         open : function() {
             var room = this;
-
             room.messages = kaskade.List.observe(collections.Messages, {
                 room_id : room.room_id
             }, {
@@ -82,6 +85,8 @@ var classes = module.exports = (function() {
                     return 0;
                 }
             });
+            
+            room.$root.openRoom = room;
 
         }
     }, function() {
