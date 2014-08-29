@@ -7,22 +7,19 @@ var classes = module.exports = (function() {
 
     /** MESSAGE **/
     classes.Message = new kaskade.Class({
-        user_id : '',
-        email : '',
-        first_name : '',
-        last_name : '',
-        created_at : ''
+        user_id: '',
+        data: ''
 
     }, function() {
         var message = this;
 
-        message.user = kaskade.Hash.observe(collection.Users, {
-            user_id : message.user_id
-        });
+        message.user = kaskade.Hash.observe(collections.Users.records[message.user_id]);
     });
 
     /** MESSAGE-FORM **/
     classes.MessageForm = new kaskade.Class({
+        template: 'MessageForm',
+        
         data : '',
         submit : function(e) {
             var messageForm = this;
@@ -31,9 +28,11 @@ var classes = module.exports = (function() {
 
             collections.Messages.insert({
                 room_id : room_id,
-                data : data
+                data : messageForm.data
             });
-
+            
+            messageForm.data = '';
+            
             if (e.preventDefault)
                 e.preventDefault();
             e.returnValue = false;
