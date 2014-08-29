@@ -34,9 +34,12 @@
             </div>
         </div>
         <div class="header">
-            Header
+            <span data-k.html="headerTitle.value"></span>
             <div class="left button" data-k.if="openRoom">
                 <span data-k.click="closeRoom">&lt;</span>
+            </div>
+            <div class="right button" data-k.if="currentUser.logged_in">
+                <span data-k.click="logout">Log out</span>
             </div>
         </div>
         <div class="footer">Footer</div>

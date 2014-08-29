@@ -1,5 +1,6 @@
 var collections = require('./collections');
 var classes = require('./classes');
+var dialog = require('./dialog');
 
 var App = window.App = module.exports = new kaskade.Hash({
     
@@ -29,6 +30,35 @@ var App = window.App = module.exports = new kaskade.Hash({
         }
     }),
     
-    createRoomForm: new classes.CreateRoomForm()
+    createRoomForm: new classes.CreateRoomForm(),
+    
+    headerTitle: new kaskade.Routine(function(){
+        var headerTitle = this;
+        if(headerTitle.$parent.openRoom)
+            return headerTitle.$parent.openRoom.title;
+        return 'Multi Room Forum';
+    }),
+    
+    logout: function(){
+        var app = this;
+        kaskade.execute('log_out', {},
+        function(ret) {
+            if (ret.status == 'error')
+                return dialog(ret.message);
+            if (ret.status == 'success') {
+                app.currentUser.user_id = '';
+                app.currentUser.email = '';
+                app.currentUser.first_name = '';
+                app.currentUser.last_name = '';
+                app.currentUser.created_at = '';
+                app.currentUser.logged_in = false;
+                
+                app.splash.loginForm.email = '';
+                app.splash.loginForm.password = '';
+                
+                app.openRoom = false;
+            }
+        });
+    }
     
 });
