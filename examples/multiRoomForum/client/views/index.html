@@ -75,7 +75,14 @@
         
         <!-- MESSAGE -->
         <script id="Message" type="template">
-            Hello
+            <div class="panel">
+                <div class="title">
+                    <span data-k.html="user.first_name"></span>
+                     
+                    <span data-k.html="user.last_name"></span>
+                </div>
+                <div data-k.html="data"></div>
+            </div>
         </script>
         <!-- /MESSAGE -->
         
@@ -174,7 +181,7 @@
                         
                         <div>
                             <label class="form-field">
-                                <input type="text" data-k.value="email" data-k.attr="value:email" placeholder="Email" />
+                                <input type="email" data-k.value="email" data-k.attr="value:email" placeholder="Email" />
                                 <span>Email</span>
                             </label>
                         </div>
@@ -190,6 +197,20 @@
                             <label class="form-field">
                                 <input type="password" data-k.value="password_conf" data-k.attr="value:password_conf" placeholder="Confirm Password" />
                                 <span>Confirm Password</span>
+                            </label>
+                        </div>
+                        
+                        <div>
+                            <label class="form-field">
+                                <input type="text" data-k.value="first_name" data-k.attr="value:first_name" placeholder="First Name" />
+                                <span>First Name</span>
+                            </label>
+                        </div>
+                        
+                        <div>
+                            <label class="form-field">
+                                <input type="text" data-k.value="last_name" data-k.attr="value:last_name" placeholder="Last Name" />
+                                <span>Last Name</span>
                             </label>
                         </div>
                         

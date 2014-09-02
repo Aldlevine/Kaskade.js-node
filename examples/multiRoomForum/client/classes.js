@@ -3,17 +3,19 @@ var dialog = require('./dialog');
 
 var classes = module.exports = (function() {
 
+    collections.Users.observe({},new Function());
+
     var classes = {};
 
     /** MESSAGE **/
     classes.Message = new kaskade.Class({
         user_id: '',
         data: ''
-
     }, function() {
         var message = this;
-
-        message.user = kaskade.Hash.observe(collections.Users.records[message.user_id]);
+        
+        message.user = kaskade.Hash.observeKey(collections.Users, message.user_id);
+        //message.user = kaskade.Hash.observe(collections.Users.records[message.user_id]);
     });
 
     /** MESSAGE-FORM **/
@@ -61,11 +63,12 @@ var classes = module.exports = (function() {
         template: 'Room',
         
         room_id : '',
+        user_id: '',
         title : '',
-        user : new kaskade.Hash(),
-        messages : new kaskade.List(),
+        //user : new kaskade.Hash(),
+        //messages : new kaskade.List(),
         created_at : '',
-        messageForm : new classes.MessageForm(),
+        //messageForm : new classes.MessageForm(),
         isOpen: false,
         
         open : function() {
@@ -78,9 +81,9 @@ var classes = module.exports = (function() {
                 },
                 sortingFunction : function(a, b) {
                     if (a.created_at < b.created_at)
-                        return -1;
-                    if (a.created_at > b.created_at)
                         return 1;
+                    if (a.created_at > b.created_at)
+                        return -1;
                     return 0;
                 }
             });
@@ -91,6 +94,8 @@ var classes = module.exports = (function() {
     }, function() {
         var room = this;
         room.user = kaskade.Hash.observe(collections.Users[room.user_id]);
+        room.messages = new kaskade.List([]);
+        room.messageForm = new classes.MessageForm();
 
     });
 
