@@ -1,3 +1,4 @@
+var kaskade = require('../../../lib/client/kaskade-client');
 var collections = require('./collections');
 var dialog = require('./dialog');
 

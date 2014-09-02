@@ -8,10 +8,14 @@ var SASS_COMPILE_ON_SERVE = false;
 
 /** INIT KASKADE **/
 var $k = require('../../index')({
-    debug: true,
+    debug: false,
     ssl: {
         key: fs.readFileSync(__dirname + '/key.pem'),
         cert: fs.readFileSync(__dirname + '/cert.pem')
+    },
+    redis: {
+        port: 6379,
+        host: '127.0.0.1'
     },
     port:443,
     onConnectionClose: function(conn){
@@ -79,9 +83,9 @@ app.get('/', function(req, res){
 app.get('/index.js', function(req, res){
     res.sendFile(__dirname + '/client/index-bundle.js');
 });
-app.get('/index-bundle.map', function(req, res){
-    res.sendFile(__dirname + '/client/index-bundle.map.json');
-});
+//app.get('/index-bundle.map', function(req, res){
+//    res.sendFile(__dirname + '/client/index-bundle.map.json');
+//});
 app.get('/index.css', function(req, res){
     res.sendFile(__dirname + '/client/css/index.css');
 });

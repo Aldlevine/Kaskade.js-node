@@ -1,3 +1,5 @@
+var kaskade = require('../../../lib/client/kaskade-client');
+
 module.exports = function(){
     
     var App = require('./app');

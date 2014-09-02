@@ -1,3 +1,4 @@
+var kaskade = require('../../../lib/client/kaskade-client');
 var self = module.exports;
 
 self.Users = new kaskade.data.Collection({
