@@ -1,6 +1,6 @@
 {
   "name": "kaskadejs-node",
-  "version": "0.3.0",
+  "version": "0.1.0",
   "description": "Kaskade.js-node\r ===============",
   "main": "index.js",
   "dependencies": {
